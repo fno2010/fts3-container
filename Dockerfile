@@ -9,18 +9,20 @@ ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo
 ADD $dmcrepo /etc/yum.repos.d/dmc.repo
 
 RUN \
-    yum install -y epel-release yum-plugin-priorities yum-utils git jsoncpp-devel createrepo \
-    && yum groupinstall -y 'Development Tools' \
+    yum install -y epel-release \
+    && yum upgrade -y \
     && yum --enablerepo=*-testing clean all \
+    && yum-plugin-priorities yum-utils jsoncpp-devel createrepo \
+    && yum groupinstall -y 'Development Tools' \
 
 # Build FTS packages
     && git clone ${FTS_REPO} -b ${FTS_BRANCH} /tmp/fts3 \
     && cd /tmp/fts3/packaging \
+    && yum-builddeps -y rpm/fts.spec \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo \
 
 # Install FTS packages and dependencies
-    && yum upgrade -y \
     && yum install -y centos-release-scl \
                       mysql multitail gfal2-all gfal2-plugin* \
                       fts-server fts-client fts-rest-server fts-monitoring fts-mysql fts-msg python2-pip \
