@@ -26,11 +26,11 @@ RUN \
     && cd /tmp/fts3/packaging \
     && yum-builddep -y rpm/fts.spec \
     && make rpm \
-    && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo
+    && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo \
+    && createrepo /tmp/fts3/packaging/out \
 
 # Install FTS packages
-RUN \
-    yum install -y fts-server fts-client fts-rest-server fts-monitoring fts-mysql fts-msg \
+    && yum install -y fts-server fts-client fts-rest-server fts-monitoring fts-mysql fts-msg \
 
 # Cleanup package cache
     && yum clean all \
@@ -70,11 +70,11 @@ RUN chmod +x /usr/local/bin/wait-for-it.sh
 
 # Shortcut for logfiles
 COPY logshow /usr/local/bin/logshow
-RUN chmod +x /usr/local/bin/logshow
-RUN touch /var/log/fts3/fts3server.log
-RUN chown -R fts3:fts3 /var/log/fts3/fts3server.log
-RUN touch /var/log/fts3rest/fts3rest.log
-RUN chown -R fts3:fts3 /var/log/fts3rest
+RUN chmod +x /usr/local/bin/logshow \
+    && touch /var/log/fts3/fts3server.log \
+    && chown -R fts3:fts3 /var/log/fts3/fts3server.log \
+    && touch /var/log/fts3rest/fts3rest.log \
+    && chown -R fts3:fts3 /var/log/fts3rest
 
 # Startup
 EXPOSE 8446 8449
