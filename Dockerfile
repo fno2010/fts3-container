@@ -44,13 +44,14 @@ COPY certs/rucio_ca.pem /etc/grid-security/certificates/5fca1cb1.0
 # Database configuration for FTS server
 COPY fts3config /etc/fts3/fts3config
 
-RUN chmod 400 /etc/grid-security/hostkey.pem
+RUN \
+    chmod 400 /etc/grid-security/hostkey.pem \
 
 # Upgrade to high-enough version of sqlalchemy for python2
-RUN pip install --upgrade pip==20.3.4
-RUN pip install --upgrade sqlalchemy==1.2.19
+    && pip install --upgrade pip==20.3.4 \
+    && pip install --upgrade sqlalchemy==1.2.19 \
 
-RUN chmod +x /usr/share/fts/fts-database-upgrade.py
+    && chmod +x /usr/share/fts/fts-database-upgrade.py
 
 # Configuration for FTSREST and FTSMON
 COPY fts3rest.conf /etc/httpd/conf.d/fts3rest.conf
@@ -71,8 +72,10 @@ RUN chmod +x /usr/local/bin/wait-for-it.sh
 # Shortcut for logfiles
 COPY logshow /usr/local/bin/logshow
 RUN chmod +x /usr/local/bin/logshow \
+    && mkdir -p /var/log/fts3 \
     && touch /var/log/fts3/fts3server.log \
     && chown -R fts3:fts3 /var/log/fts3/fts3server.log \
+    && mkdir -p /var/log/fts3rest \
     && touch /var/log/fts3rest/fts3rest.log \
     && chown -R fts3:fts3 /var/log/fts3rest
 
