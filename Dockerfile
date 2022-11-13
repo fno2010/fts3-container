@@ -4,6 +4,10 @@ LABEL org.opencontainers.image.authors="Jensen Zhang <hack@jensen-zhang.site>"
 ENV FTS_REPO https://github.com/fno2010/fts3
 ENV FTS_BRANCH zero-order-grad
 
+# Add FTS repo
+ARG ftsrepo=https://fts-repo.web.cern.ch/fts-repo/fts3-prod-el7.repo
+ADD $ftsrepo /etc/yum.repos.d/fts3-prod-el7.repo
+
 # Add DMC repo
 ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo
 ADD $dmcrepo /etc/yum.repos.d/dmc.repo
@@ -28,9 +32,10 @@ RUN \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo \
     && createrepo /tmp/fts3/packaging/out \
+    && echo "priority=1" >> /etc/yum.repos.d/fts3-prod-el7.repo \
 
 # Install FTS packages
-    && yum install -y fts-server fts-client fts-rest-server fts-monitoring fts-mysql fts-msg \
+    && yum install -y fts-server fts-rest-client fts-rest-server fts-monitoring fts-mysql fts-msg \
 
 # Cleanup package cache
     && yum clean all \
