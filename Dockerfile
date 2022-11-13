@@ -25,7 +25,7 @@ RUN \
 RUN \
     git clone ${FTS_REPO} -b ${FTS_BRANCH} /tmp/fts3 \
     && cd /tmp/fts3/packaging \
-    && yum-builddeps -y rpm/fts.spec \
+    && yum-builddep -y rpm/fts.spec \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo
 
