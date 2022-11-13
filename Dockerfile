@@ -18,8 +18,7 @@ RUN \
                       mysql multitail gfal2-all gfal2-plugin* \
                       python2-pip \
                       voms-config-wlcg voms-config-vo-dteam \
-                      supervisor \
-    && yum clean metadata
+                      supervisor
 
 # Build FTS packages
 RUN \
