@@ -12,26 +12,30 @@ RUN \
     yum install -y epel-release \
     && yum upgrade -y \
     && yum --enablerepo=*-testing clean all \
-    && yum-plugin-priorities yum-utils jsoncpp-devel createrepo \
     && yum groupinstall -y 'Development Tools' \
+    && yum install -y centos-release-scl \
+                      yum-plugin-priorities yum-utils createrepo \
+                      mysql multitail gfal2-all gfal2-plugin* \
+                      python2-pip \
+                      voms-config-wlcg voms-config-vo-dteam \
+                      supervisor \
+    && yum clean metadata
 
 # Build FTS packages
-    && git clone ${FTS_REPO} -b ${FTS_BRANCH} /tmp/fts3 \
+RUN \
+    git clone ${FTS_REPO} -b ${FTS_BRANCH} /tmp/fts3 \
     && cd /tmp/fts3/packaging \
     && yum-builddeps -y rpm/fts.spec \
     && make rpm \
-    && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo \
+    && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo
 
-# Install FTS packages and dependencies
-    && yum install -y centos-release-scl \
-                      mysql multitail gfal2-all gfal2-plugin* \
-                      fts-server fts-client fts-rest-server fts-monitoring fts-mysql fts-msg python2-pip \
-                      voms-config-wlcg voms-config-vo-dteam \
-                      supervisor \
+# Install FTS packages
+RUN \
+    yum install -y fts-server fts-client fts-rest-server fts-monitoring fts-mysql fts-msg \
 
 # Cleanup package cache
-    && yum clean metadata \
-    && rm -rf /var/cache/yum /tmp/fts3 \
+    && yum clean all \
+    && rm -rf /var/cache/yum /tmp/fts3
 
 # Setup FTS security
 COPY certs/hostcert_fts.pem /etc/grid-security/hostcert.pem
