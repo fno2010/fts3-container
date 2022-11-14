@@ -36,8 +36,9 @@ RUN \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=1" > /etc/yum.repos.d/fts.repo \
     && createrepo /tmp/fts3/packaging/out \
+    && echo "priority=2" >> /etc/yum.repos.d/dmc.repo \
     && echo "priority=10" >> /etc/yum.repos.d/fts3-prod-el7.repo \
-    && echo "priority=10" >> /etc/yum.repos.d/fts3-depend-el7.repo \
+    && echo "priority=20" >> /etc/yum.repos.d/fts3-depend-el7.repo \
 
 # Install FTS packages
     && yum install -y fts-server fts-rest-client fts-rest-server fts-monitoring fts-mysql fts-msg \
@@ -74,7 +75,7 @@ RUN echo "" > /etc/httpd/conf.d/ssl.conf &&\
 
 # fix Apache configuration
     && /usr/bin/sed -i 's/Listen 80/#Listen 80/g' /etc/httpd/conf/httpd.conf \
-    && cp /opt/rh/httpd24/root/usr/lib64/httpd/modules/mod_rh-python36-wsgi.so /lib64/httpd/modules
+    && cp /opt/rh/httpd24/root/usr/lib64/httpd/modules/mod_rh-python36-wsgi.so /lib64/httpd/modules \
     && cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-python36-wsgi.conf /etc/httpd/conf.modules.d
 
 # FTS monitoring ActiveMQ configuration
