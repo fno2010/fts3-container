@@ -7,3 +7,9 @@ Build the docker image for a fork of FTS3:
 ```
 docker build -t alto/fts3-container .
 ```
+
+## Change Log from Source Repo
+
+- Make parameters configurable
+
+    Signed-off-by: jensenzhang <hack@jensen-zhang.site>
