@@ -10,6 +10,10 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Define config variables
+
+    Signed-off-by: jensenzhang <hack@jensen-zhang.site>
+
 - Make parameters configurable
 
     Signed-off-by: jensenzhang <hack@jensen-zhang.site>
