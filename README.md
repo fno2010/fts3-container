@@ -10,6 +10,15 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Change throughput computation and monitoring
+
+    Add `bool timeMultiplexing` to `getPairState` to determine how to
+    compute throughput.
+
+    Change `TCNDefaultBWLimit` from `int64_t` MB/s to `double` KB/s.
+
+    Signed-off-by: jensenzhang <hack@jensen-zhang.site>
+
 - Pass all active pipes to optimizer
 
     Signed-off-by: jensenzhang <hack@jensen-zhang.site>
