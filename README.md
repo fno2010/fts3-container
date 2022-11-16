@@ -10,6 +10,8 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Remove repreated clause in sql
+
 - Add debug log for time multiplexing
 
 - Not pass table name through soci::use
