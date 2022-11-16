@@ -10,6 +10,8 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Update DB schema default charset to utf8
+
 - Add full DB schema dump
 
 - Read TCN data structures from DB
