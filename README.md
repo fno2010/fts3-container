@@ -10,6 +10,8 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Add full DB schema dump
+
 - Read TCN data structures from DB
 
 - Allow project level resource control
