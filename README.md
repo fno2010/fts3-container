@@ -10,6 +10,12 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Allow project level resource control
+
+    Considered Jacob's proposal.
+
+    Signed-off-by: jensenzhang <hack@jensen-zhang.site>
+
 - Change throughput computation and monitoring
 
     Add `bool timeMultiplexing` to `getPairState` to determine how to
