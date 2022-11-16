@@ -10,6 +10,8 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Not pass table name through soci::use
+
 - Insert default values to DB schema
 
 - Update DB schema default charset to utf8
