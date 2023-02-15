@@ -10,6 +10,8 @@ docker build -t alto/fts3-container .
 
 ## Change Log from Source Repo
 
+- Fix all the runtime errors
+
 - Test FTS ATM alg
 
 - Add whitespace between multi-line sql
