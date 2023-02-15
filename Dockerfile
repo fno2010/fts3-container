@@ -34,8 +34,6 @@ RUN \
 # Build FTS packages
 RUN \
     echo "priority=2" >> /etc/yum.repos.d/dmc.repo \
-    && echo "priority=10" >> /etc/yum.repos.d/fts3-prod-el7.repo \
-    && echo "priority=20" >> /etc/yum.repos.d/fts3-depend-el7.repo \
     && git clone ${GFAL_REPO} -b ${GFAL_BRANCH} /tmp/gfal2 \
     && cd /tmp/gfal2/packaging \
     && yum-builddep -y rpm/gfal2.spec \
@@ -48,6 +46,8 @@ RUN \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=1" > /etc/yum.repos.d/fts.repo \
     && createrepo /tmp/fts3/packaging/out \
+    && echo "priority=10" >> /etc/yum.repos.d/fts3-prod-el7.repo \
+    && echo "priority=20" >> /etc/yum.repos.d/fts3-depend-el7.repo \
 
 # Install FTS packages
     && yum install -y fts-server fts-rest-client fts-rest-server fts-monitoring fts-mysql fts-msg \
