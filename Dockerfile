@@ -1,8 +1,8 @@
 FROM centos:7
 LABEL org.opencontainers.image.authors="Jensen Zhang <hack@jensen-zhang.site>"
 
-ENV FTS_REPO https://github.com/fno2010/fts3
-ENV FTS_BRANCH master
+ENV FTS_REPO https://github.com/MattSlm/fts3
+ENV FTS_BRANCH atm-src
 
 ENV GFAL_REPO https://github.com/fno2010/gfal2
 ENV GFAL_BRANCH iperf_plugin
