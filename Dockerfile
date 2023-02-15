@@ -26,29 +26,30 @@ RUN \
     && yum groupinstall -y 'Development Tools' \
     && yum install -y centos-release-scl \
                       yum-plugin-priorities yum-utils createrepo \
-                      mysql multitail gfal2-all gfal2-plugin* \
+                      mysql multitail \
                       python2-pip \
                       voms-config-wlcg voms-config-vo-dteam \
                       supervisor
 
 # Build FTS packages
 RUN \
-    git clone ${FTS_REPO} -b ${FTS_BRANCH} /tmp/fts3 \
+    echo "priority=2" >> /etc/yum.repos.d/dmc.repo \
+    && echo "priority=10" >> /etc/yum.repos.d/fts3-prod-el7.repo \
+    && echo "priority=20" >> /etc/yum.repos.d/fts3-depend-el7.repo \
+    && git clone ${GFAL_REPO} -b ${GFAL_BRANCH} /tmp/gfal2 \
+    && cd /tmp/gfal2/packaging \
+    && yum-builddep -y rpm/gfal2.spec \
+    && make rpm \
+    && yum localinstall -y /tmp/gfal2/packaging/out/x86_64/gfal2-*.rpm \
+
+    && git clone ${FTS_REPO} -b ${FTS_BRANCH} /tmp/fts3 \
     && cd /tmp/fts3/packaging \
     && yum-builddep -y rpm/fts.spec \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=1" > /etc/yum.repos.d/fts.repo \
     && createrepo /tmp/fts3/packaging/out \
-    && git clone ${GFAL_REPO} -b ${GFAL_BRANCH} /tmp/gfal2 \
-    && cd /tmp/gfal2/packaging \
-    && yum-builddep -y rpm/gfal2.spec \
-    && make rpm \
-    && echo "priority=2" >> /etc/yum.repos.d/dmc.repo \
-    && echo "priority=10" >> /etc/yum.repos.d/fts3-prod-el7.repo \
-    && echo "priority=20" >> /etc/yum.repos.d/fts3-depend-el7.repo \
 
 # Install FTS packages
-    && yum localinstall -y /tmp/gfal2/packaging/out/x86_64/gfal2-*.rpm \
     && yum install -y fts-server fts-rest-client fts-rest-server fts-monitoring fts-mysql fts-msg \
 
 # Cleanup package cache
