@@ -2,15 +2,18 @@ FROM centos:7
 LABEL org.opencontainers.image.authors="Jensen Zhang <hack@jensen-zhang.site>"
 
 ENV FTS_REPO https://github.com/fno2010/fts3
-ENV FTS_BRANCH zero-order-grad
+ENV FTS_BRANCH master
+
+ENV GFAL_REPO https://github.com/fno2010/gfal2
+ENV GFAL_BRANCH iperf_plugin
 
 # Add FTS repo
 ARG ftsrepo=https://fts-repo.web.cern.ch/fts-repo/fts3-prod-el7.repo
 ADD $ftsrepo /etc/yum.repos.d/fts3-prod-el7.repo
 
 # Add FTS third-party dependencies repo
-ARG ftsrepo=https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo
-ADD $ftsrepo /etc/yum.repos.d/fts3-depend-el7.repo
+ARG ftsdeprepo=https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo
+ADD $ftsdeprepo /etc/yum.repos.d/fts3-depend-el7.repo
 
 # Add DMC repo
 ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo
@@ -36,16 +39,21 @@ RUN \
     && make rpm \
     && echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///tmp/fts3/packaging/out\ngpgcheck=0\nenabled=1\npriority=1" > /etc/yum.repos.d/fts.repo \
     && createrepo /tmp/fts3/packaging/out \
+    && git clone ${GFAL_REPO} -b ${GFAL_BRANCH} /tmp/gfal2 \
+    && cd /tmp/gfal2/packaging \
+    && yum-builddep -y rpm/gfal2.spec \
+    && make rpm \
     && echo "priority=2" >> /etc/yum.repos.d/dmc.repo \
     && echo "priority=10" >> /etc/yum.repos.d/fts3-prod-el7.repo \
     && echo "priority=20" >> /etc/yum.repos.d/fts3-depend-el7.repo \
 
 # Install FTS packages
+    && yum localinstall -y /tmp/gfal2/packaging/out/x86_64/gfal2-*.rpm \
     && yum install -y fts-server fts-rest-client fts-rest-server fts-monitoring fts-mysql fts-msg \
 
 # Cleanup package cache
     && yum clean all \
-    && rm -rf /var/cache/yum /tmp/fts3
+    && rm -rf /var/cache/yum /tmp/fts3 /tmp/gfal2
 
 # Setup FTS security
 COPY certs/hostcert_fts.pem /etc/grid-security/hostcert.pem
