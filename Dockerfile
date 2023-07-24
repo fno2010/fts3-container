@@ -2,7 +2,7 @@ FROM centos:7
 LABEL org.opencontainers.image.authors="Jensen Zhang <hack@jensen-zhang.site>"
 
 ENV FTS_REPO https://github.com/cern-fts/fts3
-ENV FTS_BRANCH v3.12.8
+ENV FTS_BRANCH develop
 
 # Add FTS repo
 ARG ftsrepo=https://fts-repo.web.cern.ch/fts-repo/fts3-prod-el7.repo
