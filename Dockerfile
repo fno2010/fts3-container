@@ -13,7 +13,7 @@ ARG ftsdeprepo=https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo
 ADD $ftsdeprepo /etc/yum.repos.d/fts3-depend-el7.repo
 
 # Add DMC repo
-ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo
+ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-devel-el7.repo
 ADD $dmcrepo /etc/yum.repos.d/dmc.repo
 
 RUN \
